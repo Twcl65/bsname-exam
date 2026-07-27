@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState } from "react"
-import Image from "next/image"
 import { RoleBasedSidebar } from "@/components/sidebar/role-based-sidebar"
 import { ProtectedRoute } from "@/components/protected-route"
 import {
@@ -90,7 +89,7 @@ export default function SuperAdminSubjectManagement() {
     const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null)
     const [searchTerm, setSearchTerm] = useState("")
     const [questionFilter, setQuestionFilter] = useState("")
-    
+
     // Add Subtopic Dialog states
     const [addSubtopicDialogOpen, setAddSubtopicDialogOpen] = useState(false)
     const [newSubtopics, setNewSubtopics] = useState<Subtopic[]>([])
@@ -110,7 +109,7 @@ export default function SuperAdminSubjectManagement() {
     // Delete confirmation states
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [subjectToDelete, setSubjectToDelete] = useState<Subject | null>(null)
-    
+
     // Loading states for operations
     const [creating, setCreating] = useState(false)
     const [updating, setUpdating] = useState(false)
@@ -153,7 +152,7 @@ export default function SuperAdminSubjectManagement() {
             })
 
             const result = await response.json()
-            
+
             if (result.success) {
                 console.log('Upload successful:', result.data)
                 setSubjectPicture(result.data.imageId)
@@ -246,7 +245,7 @@ export default function SuperAdminSubjectManagement() {
 
         try {
             const validSubtopics = newSubtopics.filter(st => st.name.trim())
-            
+
             for (const subtopic of validSubtopics) {
                 const response = await fetch(`/api/subjects/${selectedSubject.id}/subtopics`, {
                     method: 'POST',
@@ -258,9 +257,9 @@ export default function SuperAdminSubjectManagement() {
                         questionCount: subtopic.questionCount
                     }),
                 })
-                
+
                 const result = await response.json()
-                
+
                 if (!result.success) {
                     console.error('Failed to create subtopic:', result.error)
                     return
@@ -269,10 +268,10 @@ export default function SuperAdminSubjectManagement() {
 
             // Refresh the subject data
             await fetchSubjects()
-            
+
             // Close dialog and reset
             closeAddSubtopicDialog()
-            
+
         } catch (error) {
             console.error('Error saving subtopics:', error)
         }
@@ -315,7 +314,7 @@ export default function SuperAdminSubjectManagement() {
             })
 
             const result = await response.json()
-            
+
             if (result.success) {
                 setEditSubjectPicture(result.data.imageId)
                 setEditSubjectPictureS3Url(result.data.s3Url)
@@ -379,7 +378,7 @@ export default function SuperAdminSubjectManagement() {
             })
 
             const result = await response.json()
-            
+
             if (result.success) {
                 // Update the subject in the list
                 setSubjects(subjects.map(subject =>
@@ -423,7 +422,7 @@ export default function SuperAdminSubjectManagement() {
         setDeleting(true)
         try {
             const result = await deleteSubject(subjectToDelete.id)
-            
+
             if (result.success) {
                 closeDeleteDialog()
             } else {
@@ -440,15 +439,15 @@ export default function SuperAdminSubjectManagement() {
     const filteredSubjects = subjects.filter(subject => {
         // Search filter
         const matchesSearch = subject.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        subject.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        subject.subtopics.some(subtopic =>
-            subtopic.name.toLowerCase().includes(searchTerm.toLowerCase())
+            subject.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            subject.subtopics.some(subtopic =>
+                subtopic.name.toLowerCase().includes(searchTerm.toLowerCase())
             )
-        
+
         // Question count filter
         const totalQuestions = subject.subtopics.reduce((total, subtopic) => total + subtopic.questionCount, 0)
         let matchesQuestionFilter = true
-        
+
         if (questionFilter) {
             switch (questionFilter) {
                 case "0-10":
@@ -470,7 +469,7 @@ export default function SuperAdminSubjectManagement() {
                     matchesQuestionFilter = true
             }
         }
-        
+
         return matchesSearch && matchesQuestionFilter
     })
 
@@ -497,7 +496,7 @@ export default function SuperAdminSubjectManagement() {
             setError(null)
             const response = await fetch('/api/subjects')
             const result = await response.json()
-            
+
             if (result.success) {
                 // Ensure dates are properly converted to Date objects
                 const subjectsWithDates = result.data.map((subject: { id: string; name: string; description: string; subject_time?: number; exam_question_limit?: number; subject_picture?: string; subject_picture_s3_url?: string; subtopics: Array<{ id: string; name: string; question_count: number; created_at: string }>; created_at: string }) => ({
@@ -533,9 +532,9 @@ export default function SuperAdminSubjectManagement() {
                 },
                 body: JSON.stringify(subjectData),
             })
-            
+
             const result = await response.json()
-            
+
             if (result.success) {
                 // Ensure dates are properly converted to Date objects
                 const subjectWithDates = {
@@ -562,9 +561,9 @@ export default function SuperAdminSubjectManagement() {
             const response = await fetch(`/api/subjects/${id}`, {
                 method: 'DELETE',
             })
-            
+
             const result = await response.json()
-            
+
             if (result.success) {
                 setSubjects(prev => prev.filter(subject => subject.id !== id))
                 return { success: true }
@@ -611,7 +610,7 @@ export default function SuperAdminSubjectManagement() {
                         <div className="flex items-center">
                             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                                 <DialogTrigger asChild>
-                                    <Button className="bg-primary cursor-pointer hover:bg-primary/90 text-primary-foreground">
+                                    <Button className="bg-green-600 cursor-pointer hover:bg-green-900 text-primary-foreground">
                                         <Plus className="h-4 w-4 mr-2" />
                                         Create Subject
                                     </Button>
@@ -646,13 +645,11 @@ export default function SuperAdminSubjectManagement() {
                                                         <span>Uploading image...</span>
                                                     </div>
                                                 )}
-                                                {subjectPicture && !uploading && (
+                                                {(subjectPicture || subjectPictureS3Url) && !uploading && (
                                                     <div className="flex items-center space-x-2">
-                                                        <Image 
-                                                            src={subjectPictureS3Url || `/api/images/uploaded/${String(subjectPicture)}`} 
-                                                            alt="Preview" 
-                                                            width={64}
-                                                            height={64}
+                                                        <img
+                                                            src={subjectPictureS3Url || `/api/images/uploaded/${String(subjectPicture)}`}
+                                                            alt="Preview"
                                                             className="w-16 h-16 object-cover rounded border border-gray-200"
                                                             onLoad={() => console.log('Preview image loaded successfully')}
                                                             onError={(e) => console.error('Preview image failed to load:', e)}
@@ -821,7 +818,7 @@ export default function SuperAdminSubjectManagement() {
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
                             </div>
-                            
+
                             {/* Filter Section */}
                             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                                 <Label htmlFor="question-filter" className="font-semibold text-base whitespace-nowrap">
@@ -858,7 +855,7 @@ export default function SuperAdminSubjectManagement() {
                                         <p className="text-red-600 font-medium">Error loading subjects</p>
                                         <p className="text-sm text-red-500 mt-1">{error}</p>
                                     </div>
-                                    <Button 
+                                    <Button
                                         onClick={fetchSubjects}
                                         variant="outline"
                                         size="sm"
@@ -914,10 +911,10 @@ export default function SuperAdminSubjectManagement() {
                                                                     </span>
                                                                 </TableCell>
                                                                 <TableCell className="whitespace-nowrap py-2 hidden md:table-cell">
-                                                                     <span className="text-sm text-gray-700">
-                                                                         {subject.exam_question_limit || 100} Qs
-                                                                     </span>
-                                                                 </TableCell>
+                                                                    <span className="text-sm text-gray-700">
+                                                                        {subject.exam_question_limit || 100} Qs
+                                                                    </span>
+                                                                </TableCell>
                                                                 <TableCell className="whitespace-nowrap py-2">
                                                                     <span className="text-sm text-gray-700">
                                                                         {subject.subtopics.length} subtopic{subject.subtopics.length !== 1 ? 's' : ''}
@@ -1033,7 +1030,7 @@ export default function SuperAdminSubjectManagement() {
                                     <div className="flex-1 overflow-y-auto space-y-6">
                                         {/* Subject Information Card */}
                                         <Card>
-                                           
+
                                             <CardContent className="space-y-4">
                                                 {/* Subject Picture and Basic Info */}
                                                 <div className="flex flex-col sm:flex-row gap-4 items-start">
@@ -1047,7 +1044,7 @@ export default function SuperAdminSubjectManagement() {
                                                             <p className="text-gray-600 mt-1">{selectedSubject.description || "No description provided"}</p>
                                                         </div>
                                                         <div className="flex gap-4 text-sm text-gray-500">
-                                                        <span>Created: {selectedSubject.createdAt.toLocaleDateString('en-US', {
+                                                            <span>Created: {selectedSubject.createdAt.toLocaleDateString('en-US', {
                                                                 year: 'numeric',
                                                                 month: 'short',
                                                                 day: 'numeric'
@@ -1130,13 +1127,11 @@ export default function SuperAdminSubjectManagement() {
                                                     <span>Uploading image...</span>
                                                 </div>
                                             )}
-                                            {editSubjectPicture && !editUploading && (
+                                            {(editSubjectPicture || editSubjectPictureS3Url) && !editUploading && (
                                                 <div className="flex items-center space-x-2">
-                                                    <Image 
-                                                        src={editSubjectPictureS3Url || `/api/images/uploaded/${String(editSubjectPicture)}`} 
-                                                        alt="Preview" 
-                                                        width={64}
-                                                        height={64}
+                                                    <img
+                                                        src={editSubjectPictureS3Url || `/api/images/uploaded/${String(editSubjectPicture)}`}
+                                                        alt="Preview"
                                                         className="w-16 h-16 object-cover rounded border border-gray-200"
                                                         onLoad={() => console.log('Edit preview image loaded successfully')}
                                                         onError={(e) => console.error('Edit preview image failed to load:', e)}

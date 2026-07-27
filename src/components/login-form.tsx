@@ -49,7 +49,7 @@ export function LoginForm({
 
       if (result.success) {
         const userData = result.data
-        
+
         login({
           id: userData.id,
           name: userData.fullName,
@@ -72,24 +72,27 @@ export function LoginForm({
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
+    <div className={cn("flex flex-col gap-6 w-full", className)} {...props}>
+      <Card className="border border-gray-100 bg-white shadow-xl rounded-xl">
+        <CardHeader className="flex flex-col items-center pb-2 pt-6">
+
+          <CardTitle className="text-2xl font-bold text-gray-900 text-left">Login</CardTitle>
+          <CardDescription className="text-gray-500 text-center text-sm mt-1">
             Enter your credentials below to access your account
           </CardDescription>
         </CardHeader>
+
         <CardContent>
           <form onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-5 mt-2">
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                   {error}
                 </div>
               )}
+
               <div className="grid gap-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username" className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Username</Label>
                 <Input
                   id="username"
                   type="text"
@@ -98,15 +101,12 @@ export function LoginForm({
                   minLength={3}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  className="border-gray-200 focus-visible:ring-emerald-500/20 focus-visible:border-emerald-500"
                 />
-
               </div>
 
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                
-                </div>
+                <Label htmlFor="password" className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -116,10 +116,11 @@ export function LoginForm({
                     minLength={8}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    className="pr-10 border-gray-200 focus-visible:ring-emerald-500/20 focus-visible:border-emerald-500"
                   />
                   <button
                     type="button"
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -129,15 +130,16 @@ export function LoginForm({
                     )}
                   </button>
                 </div>
-
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg shadow-sm transition-colors cursor-pointer mt-2"
+              >
                 {isLoading ? "Logging in..." : "Login"}
               </Button>
-            
             </div>
-           
           </form>
         </CardContent>
       </Card>

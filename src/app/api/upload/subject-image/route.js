@@ -6,14 +6,14 @@
 
 import { NextResponse } from 'next/server';
 import pool from '@/lib/database';
-import { uploadToS3, validateS3Config } from '@/lib/s3';
+import { uploadToSupabase, validateSupabaseConfig } from '@/lib/supabase';
 
 export async function POST(request) {
     try {
-        // Validate S3 configuration
-        if (!validateS3Config()) {
+        // Validate Supabase configuration
+        if (!validateSupabaseConfig()) {
             return NextResponse.json(
-                { success: false, error: 'S3 configuration is missing' },
+                { success: false, error: 'Supabase configuration is missing' },
                 { status: 500 }
             );
         }
@@ -53,16 +53,16 @@ export async function POST(request) {
         // Generate unique ID for the image
         const imageId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
 
-        // Upload to S3
-        console.log(`Starting S3 upload for file: ${file.name}`);
-        const uploadResult = await uploadToS3(buffer, file.name, file.type, 'subjects');
+        // Upload to Supabase Storage
+        console.log(`Starting Supabase upload for file: ${file.name}`);
+        const uploadResult = await uploadToSupabase(buffer, file.name, file.type, 'subjects');
         
         if (!uploadResult.success) {
-            console.error('S3 upload failed:', uploadResult.error);
+            console.error('Supabase upload failed:', uploadResult.error);
             return NextResponse.json(
                 { 
                     success: false, 
-                    error: 'Failed to upload to S3: ' + uploadResult.error,
+                    error: 'Failed to upload to Supabase: ' + uploadResult.error,
                     details: {
                         fileName: file.name,
                         fileSize: file.size,
@@ -74,9 +74,9 @@ export async function POST(request) {
             );
         }
         
-        console.log('S3 upload successful:', uploadResult.url);
+        console.log('Supabase upload successful:', uploadResult.url);
 
-        // Store S3 metadata in database
+        // Store metadata in database
         await pool.execute(
             'INSERT INTO s3_images (id, original_filename, content_type, s3_key, s3_url, file_size, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())',
             [imageId, file.name, file.type, uploadResult.key, uploadResult.url, file.size]
@@ -94,7 +94,7 @@ export async function POST(request) {
                 size: file.size,
                 type: file.type
             },
-            message: 'File uploaded successfully to S3'
+            message: 'File uploaded successfully to Supabase Storage'
         });
 
     } catch (error) {

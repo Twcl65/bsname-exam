@@ -28,6 +28,7 @@ import {
 import {
     BarChart,
     Bar,
+    Cell,
     XAxis,
     YAxis,
     CartesianGrid,
@@ -183,7 +184,7 @@ export default function StudentDashboard() {
                         <div className="flex items-center gap-4">
                             <Avatar className="h-10 w-10">
                                 <AvatarImage 
-                                    src={user?.avatar && user.avatar !== "/avatars/default.jpg" ? `/api/images/uploaded/${String(user.avatar)}` : undefined} 
+                                    src={user?.avatar ? (user.avatar.startsWith('http://') || user.avatar.startsWith('https://') || user.avatar.startsWith('/')) ? user.avatar : `/api/images/uploaded/${user.avatar}` : undefined} 
                                     alt={user?.name || 'Student'} 
                                 />
                                 <AvatarFallback className="bg-blue-100 text-blue-600 text-lg font-bold">
@@ -196,11 +197,10 @@ export default function StudentDashboard() {
                             </div>
                         </div>
 
-                        {/* Stats Cards */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-0 px-0 py-0">
                             <div>
                                 <Card className="flex flex-row items-center gap-4 h-16 w-full p-4 border border-gray-200 bg-white shadow-xs rounded-lg">
-                                    <div className="w-10 h-10 flex items-center justify-center bg-black rounded-lg shadow-md">
+                                    <div className="w-10 h-10 flex items-center justify-center bg-red-500 rounded-lg shadow-md">
                                         <BookOpen className="w-5 h-5 text-white" />
                                     </div>
                                     <div className="flex flex-col justify-center h-full">
@@ -211,7 +211,7 @@ export default function StudentDashboard() {
                             </div>
                             <div>
                                 <Card className="flex flex-row items-center gap-4 h-16 w-full p-4 border border-gray-200 bg-white shadow-xs rounded-lg">
-                                    <div className="w-10 h-10 flex items-center justify-center bg-black rounded-lg shadow-md">
+                                    <div className="w-10 h-10 flex items-center justify-center bg-blue-500 rounded-lg shadow-md">
                                         <BookOpen className="w-5 h-5 text-white" />
                                     </div>
                                     <div className="flex flex-col justify-center h-full">
@@ -281,7 +281,11 @@ export default function StudentDashboard() {
                                                             return `Subject: ${label}`
                                                         }}
                                                     />
-                                                    <Bar dataKey="attempts" fill="black" radius={[8, 8, 0, 0]}>
+                                                    <Bar dataKey="attempts" radius={[8, 8, 0, 0]}>
+                                                        {subjectStats.map((entry, index) => {
+                                                            const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4']
+                                                            return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                                                        })}
                                                         <LabelList
                                                             position="top"
                                                             offset={10}

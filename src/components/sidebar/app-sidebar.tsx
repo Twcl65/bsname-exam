@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation"
 import {
   LifeBuoy,
   MessageSquare,
-  Anchor,
   Settings,
   UserCheck,
   BookOpen
@@ -162,11 +161,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-full bg-black text-white">
-                  <Anchor className="size-4" />
+                <div className="flex aspect-square size-10 items-center justify-center rounded-full overflow-hidden bg-transparent">
+                  <img src="/logo.png" alt="USTP Logo" className="size-10 object-contain" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">BSNAME-ExamSys</span>
+                  <span className="truncate font-semibold">Board Exam System</span>
                   <span className="truncate text-xs">Learning Management System</span>
                 </div>
               </a>

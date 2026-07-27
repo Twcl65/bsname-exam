@@ -39,6 +39,32 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(false)
     }, [])
 
+    useEffect(() => {
+        if (!user?.id) return
+
+        const sendHeartbeat = async () => {
+            try {
+                await fetch('/api/users/status', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId: user.id }),
+                })
+            } catch (error) {
+                console.error('Heartbeat error:', error)
+            }
+        }
+
+        // Send immediately on load/login
+        sendHeartbeat()
+
+        // Set up interval every 30 seconds
+        const intervalId = setInterval(sendHeartbeat, 30000)
+
+        return () => clearInterval(intervalId)
+    }, [user?.id])
+
     const login = (userData: User) => {
         setUser(userData)
         localStorage.setItem('user', JSON.stringify(userData))

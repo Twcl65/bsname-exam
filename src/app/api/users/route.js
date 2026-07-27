@@ -21,6 +21,7 @@ export async function GET() {
                 u.phone,
                 u.is_active,
                 u.last_login,
+                u.last_seen,
                 u.created_at,
                 u.updated_at,
                 s3.s3_url as profile_picture_s3_url
@@ -39,6 +40,7 @@ export async function GET() {
             phone: user.phone,
             isActive: user.is_active,
             lastLogin: user.last_login ? new Date(user.last_login) : null,
+            lastSeen: user.last_seen ? new Date(user.last_seen) : null,
             createdAt: new Date(user.created_at)
         }));
 

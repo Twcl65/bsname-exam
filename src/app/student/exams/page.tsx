@@ -251,8 +251,7 @@ export default function StudentExams() {
                                                             ? `/api/images/uploaded/${String(subject.subject_picture)}` 
                                                             : '/placeholder-subject.svg'}
                                                     alt={subject.name}
-                                                    width={260}
-                                                    height={128}
+                                                    fill={true}
                                                     className="w-full h-full object-cover"
                                                     fallbackSrc="/placeholder-subject.svg"
                                                 />

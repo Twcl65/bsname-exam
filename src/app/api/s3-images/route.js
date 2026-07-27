@@ -6,7 +6,7 @@
 
 import { NextResponse } from 'next/server';
 import pool from '@/lib/database';
-import { deleteFromS3, validateS3Config } from '@/lib/s3';
+import { deleteFromSupabase, validateSupabaseConfig } from '@/lib/supabase';
 
 // GET - Retrieve S3 image metadata
 export async function GET(request) {
@@ -52,10 +52,10 @@ export async function GET(request) {
 // DELETE - Delete S3 image
 export async function DELETE(request) {
     try {
-        // Validate S3 configuration
-        if (!validateS3Config()) {
+        // Validate Supabase configuration
+        if (!validateSupabaseConfig()) {
             return NextResponse.json(
-                { success: false, error: 'S3 configuration is missing' },
+                { success: false, error: 'Supabase configuration is missing' },
                 { status: 500 }
             );
         }
@@ -85,12 +85,12 @@ export async function DELETE(request) {
 
         const imageData = rows[0];
 
-        // Delete from S3
-        const deleteResult = await deleteFromS3(imageData.s3_key);
+        // Delete from Supabase Storage
+        const deleteResult = await deleteFromSupabase(imageData.s3_key);
         
         if (!deleteResult.success) {
             return NextResponse.json(
-                { success: false, error: 'Failed to delete from S3: ' + deleteResult.error },
+                { success: false, error: 'Failed to delete from Supabase: ' + deleteResult.error },
                 { status: 500 }
             );
         }

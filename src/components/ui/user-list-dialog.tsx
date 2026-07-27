@@ -94,7 +94,7 @@ export function UserListDialog({ isOpen, onClose, subjectId, subjectName, onUser
     return (
         <>
             <Dialog open={isOpen} onOpenChange={onClose}>
-                <DialogContent className="w-[95vw] max-w-[800px] max-h-[90vh] overflow-y-auto sm:w-[90vw] md:w-[85vw] lg:w-[80vw] xl:w-[75vw]">
+                <DialogContent className="w-[95vw] max-w-5xl max-h-[90vh] overflow-y-auto sm:w-[90vw] md:w-[85vw] lg:w-[80vw] xl:w-[75vw]">
                     <DialogHeader>
                         <DialogTitle>Students who took {subjectName} exams</DialogTitle>
                         <DialogDescription>
@@ -121,7 +121,10 @@ export function UserListDialog({ isOpen, onClose, subjectId, subjectName, onUser
                                             <div className="flex items-center justify-between mb-3">
                                                 <div className="flex items-center space-x-3 flex-1 min-w-0">
                                                     <Avatar className="h-10 w-10">
-                                                        <AvatarImage src={user.profilePicture} alt={user.fullName} />
+                                                        <AvatarImage 
+                                                            src={user.profilePicture ? (user.profilePicture.startsWith('http://') || user.profilePicture.startsWith('https://') || user.profilePicture.startsWith('/')) ? user.profilePicture : `/api/images/uploaded/${user.profilePicture}` : undefined} 
+                                                            alt={user.fullName} 
+                                                        />
                                                         <AvatarFallback>
                                                             {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
                                                         </AvatarFallback>
@@ -157,7 +160,7 @@ export function UserListDialog({ isOpen, onClose, subjectId, subjectName, onUser
                                                     <p className="text-xs text-gray-500">Best</p>
                                                 </div>
                                                 <div className="text-center p-2 bg-gray-50 rounded">
-                                                    <p className="font-medium text-xs">{user.lastExamDate.toLocaleDateString()}</p>
+                                                    <p className="font-medium text-xs">{user.lastExamDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                                                     <p className="text-xs text-gray-500">Last Exam</p>
                                                 </div>
                                             </div>
@@ -167,7 +170,10 @@ export function UserListDialog({ isOpen, onClose, subjectId, subjectName, onUser
                                         <div className="sm:hidden space-y-3">
                                             <div className="flex items-center space-x-3">
                                                 <Avatar className="h-10 w-10">
-                                                    <AvatarImage src={user.profilePicture} alt={user.fullName} />
+                                                    <AvatarImage 
+                                                        src={user.profilePicture ? (user.profilePicture.startsWith('http://') || user.profilePicture.startsWith('https://') || user.profilePicture.startsWith('/')) ? user.profilePicture : `/api/images/uploaded/${user.profilePicture}` : undefined} 
+                                                        alt={user.fullName} 
+                                                    />
                                                     <AvatarFallback>
                                                         {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
                                                     </AvatarFallback>
@@ -194,7 +200,7 @@ export function UserListDialog({ isOpen, onClose, subjectId, subjectName, onUser
                                                     <p className="text-xs text-gray-500">Best</p>
                                                 </div>
                                                 <div className="text-center p-2 bg-gray-50 rounded">
-                                                    <p className="font-medium text-xs">{user.lastExamDate.toLocaleDateString()}</p>
+                                                    <p className="font-medium text-xs">{user.lastExamDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                                                     <p className="text-xs text-gray-500">Last Exam</p>
                                                 </div>
                                             </div>

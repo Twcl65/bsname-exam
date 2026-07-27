@@ -25,14 +25,13 @@ import { useUser } from "@/contexts/UserContext"
 import { 
   Users, 
   BookOpen, 
-  Trophy, 
   TrendingUp,
-  UserCheck,
   BarChart3,
 } from "lucide-react"
 import {
   BarChart,
   Bar,
+  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -60,6 +59,7 @@ interface OnlineUser {
   role: string
   lastSeen: string
   status: 'online' | 'offline'
+  avatar: string | null
 }
 
 export default function SuperAdminDashboard() {
@@ -75,9 +75,11 @@ export default function SuperAdminDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
+    const fetchDashboardData = async (isInitial = false) => {
       try {
-        setLoading(true)
+        if (isInitial) {
+          setLoading(true)
+        }
         
         // Fetch users data
         const usersResponse = await fetch('/api/users')
@@ -165,13 +167,31 @@ export default function SuperAdminDashboard() {
         const onlineUsersData: OnlineUser[] = usersData.success 
           ? usersData.data
               .filter((user: { role: string }) => user.role === 'Student') // Only show students
-              .map((user: { id: string; fullName?: string; username?: string; role: string; createdAt?: string }) => ({
-                id: user.id,
-                name: user.fullName || user.username || 'Unknown Student',
-                role: user.role || 'Student',
-                lastSeen: formatTimeAgo(user.createdAt || new Date().toISOString()),
-                status: Math.random() > 0.3 ? 'online' : 'offline' // Simulate online status
-              })).slice(0, 8) // Show top 8 students
+              .map((user: { id: string; fullName?: string; username?: string; role: string; lastSeen?: string; profilePicture?: string }) => {
+                const lastSeenTime = user.lastSeen ? new Date(user.lastSeen) : null
+                const now = new Date()
+                // Check if last seen is within 2 minutes (120,000 ms)
+                const isOnline = lastSeenTime ? (now.getTime() - lastSeenTime.getTime() < 120000) : false
+                
+                return {
+                  id: user.id,
+                  name: user.fullName || user.username || 'Unknown Student',
+                  role: user.role || 'Student',
+                  lastSeen: lastSeenTime && user.lastSeen ? formatTimeAgo(user.lastSeen) : 'Never',
+                  status: (isOnline ? 'online' : 'offline') as 'online' | 'offline',
+                  avatar: user.profilePicture || null,
+                  lastSeenEpoch: lastSeenTime ? lastSeenTime.getTime() : 0,
+                  isOnline: isOnline
+                }
+              })
+              .sort((a: { isOnline: boolean; lastSeenEpoch: number }, b: { isOnline: boolean; lastSeenEpoch: number }) => {
+                // Online users first
+                if (a.isOnline && !b.isOnline) return -1
+                if (!a.isOnline && b.isOnline) return 1
+                // Then sort by last seen epoch descending
+                return b.lastSeenEpoch - a.lastSeenEpoch
+              })
+              .slice(0, 8) // Show top 8 students
           : []
 
         setOnlineUsers(onlineUsersData)
@@ -188,11 +208,16 @@ export default function SuperAdminDashboard() {
         setSubjectStats([])
         setOnlineUsers([])
       } finally {
-        setLoading(false)
+        if (isInitial) {
+          setLoading(false)
+        }
       }
     }
 
-    fetchDashboardData()
+    fetchDashboardData(true)
+    const intervalId = setInterval(() => fetchDashboardData(false), 15000) // Poll every 15 seconds for real-time accuracy
+
+    return () => clearInterval(intervalId)
   }, [])
 
   const formatTimeAgo = (dateString: string) => {
@@ -200,29 +225,11 @@ export default function SuperAdminDashboard() {
     const date = new Date(dateString)
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
     
+    if (diffInSeconds < 0) return 'Just now'
     if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`
     return `${Math.floor(diffInSeconds / 86400)} days ago`
-  }
-
-
-  const getRoleIcon = (role: string) => {
-    switch (role.toLowerCase()) {
-      case 'student': return <Users className="w-4 h-4 text-white" />
-      case 'instructor': return <UserCheck className="w-4 h-4 text-white" />
-      case 'super-admin': return <Trophy className="w-4 h-4 text-white" />
-      default: return <Users className="w-4 h-4 text-white" />
-    }
-  }
-
-  const getRoleColor = (role: string) => {
-    switch (role.toLowerCase()) {
-      case 'student': return 'bg-blue-500'
-      case 'instructor': return 'bg-green-500'
-      case 'super-admin': return 'bg-purple-500'
-      default: return 'bg-gray-500'
-    }
   }
 
   const getStatusColor = (status: string) => {
@@ -336,7 +343,7 @@ export default function SuperAdminDashboard() {
               <div className="flex items-center gap-4">
                 <Avatar className="h-10 w-10">
                   <AvatarImage 
-                    src={user?.avatar || undefined} 
+                    src={user?.avatar ? (user.avatar.startsWith('http://') || user.avatar.startsWith('https://') || user.avatar.startsWith('/')) ? user.avatar : `/api/images/uploaded/${user.avatar}` : undefined} 
                     alt={user?.name || 'Admin'} 
                   />
                   <AvatarFallback className="bg-blue-100 text-blue-600 text-lg font-bold">
@@ -349,11 +356,11 @@ export default function SuperAdminDashboard() {
                 </div>
             </div>
 
-            {/* Stats Cards */}
+             {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-0 px-0 py-0">
               <div>
                 <Card className="flex flex-row items-center gap-4 h-16 w-full p-4 border border-gray-200 bg-white shadow-xs rounded-lg">
-                  <div className="w-10 h-10 flex items-center justify-center bg-black rounded-lg shadow-md">
+                  <div className="w-10 h-10 flex items-center justify-center bg-red-500 rounded-lg shadow-md">
                     <Users className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex flex-col justify-center h-full">
@@ -364,7 +371,7 @@ export default function SuperAdminDashboard() {
               </div>
               <div>
                 <Card className="flex flex-row items-center gap-4 h-16 w-full p-4 border border-gray-200 bg-white shadow-xs rounded-lg">
-                  <div className="w-10 h-10 flex items-center justify-center bg-black rounded-lg shadow-md">
+                  <div className="w-10 h-10 flex items-center justify-center bg-blue-500 rounded-lg shadow-md">
                     <BookOpen className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex flex-col justify-center h-full">
@@ -381,12 +388,12 @@ export default function SuperAdminDashboard() {
                   <div className="flex flex-col justify-center h-full">
                     <span className="text-xs text-muted-foreground font-medium">Total Questions</span>
                     <span className="text-base font-bold text-gray-900">{stats.totalQuestions}</span>
-            </div>
+                  </div>
                 </Card>
               </div>
               <div>
                 <Card className="flex flex-row items-center gap-4 h-16 w-full p-4 border border-gray-200 bg-white shadow-xs rounded-lg">
-                  <div className="w-10 h-10 flex items-center justify-center bg-black rounded-lg shadow-md">
+                  <div className="w-10 h-10 flex items-center justify-center bg-yellow-500 rounded-lg shadow-md">
                     <TrendingUp className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex flex-col justify-center h-full">
@@ -441,7 +448,11 @@ export default function SuperAdminDashboard() {
                               return `Subject: ${label}`
                             }}
                           />
-                          <Bar dataKey="attempts" fill="black" radius={[8, 8, 0, 0]}>
+                           <Bar dataKey="attempts" radius={[8, 8, 0, 0]}>
+                            {subjectStats.map((entry, index) => {
+                              const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4']
+                              return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                            })}
                             <LabelList
                               position="top"
                               offset={10}
@@ -478,9 +489,15 @@ export default function SuperAdminDashboard() {
                     {onlineUsers.length > 0 ? (
                       onlineUsers.map((user) => (
                         <div key={user.id} className="flex items-center gap-3 px-3 py-2 rounded-md border border-gray-200 text-sm bg-gray-50">
-                          <div className={`w-8 h-8 ${getRoleColor(user.role)} rounded-full flex items-center justify-center flex-shrink-0`}>
-                            {getRoleIcon(user.role)}
-                          </div>
+                          <Avatar className="h-8 w-8 flex-shrink-0">
+                            <AvatarImage 
+                              src={user.avatar ? (user.avatar.startsWith('http://') || user.avatar.startsWith('https://') || user.avatar.startsWith('/')) ? user.avatar : `/api/images/uploaded/${user.avatar}` : undefined} 
+                              alt={user.name} 
+                            />
+                            <AvatarFallback className="bg-slate-100 text-slate-600 text-xs font-semibold">
+                              {user.name ? user.name.charAt(0).toUpperCase() : 'S'}
+                            </AvatarFallback>
+                          </Avatar>
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                               <p className="text-gray-900 font-medium">{user.name}</p>

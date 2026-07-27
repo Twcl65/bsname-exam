@@ -50,8 +50,8 @@ export function S3Image({
     setIsLoading(false);
   };
 
-  // If it's an S3 URL, use it directly
-  if (src?.startsWith('https://') && src.includes('amazonaws.com')) {
+  // If it's a remote URL, use it directly
+  if (src?.startsWith('https://')) {
     return (
       <div className={`relative ${className || ''}`} style={style} onClick={onClick}>
         {isLoading && (
@@ -68,7 +68,7 @@ export function S3Image({
           sizes={sizes}
           onError={handleError}
           onLoad={handleLoad}
-          className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+          className={`transition-opacity duration-300 object-cover ${fill ? 'w-full h-full' : ''} ${isLoading ? 'opacity-0' : 'opacity-100'}`}
         />
       </div>
     );
@@ -91,7 +91,7 @@ export function S3Image({
         sizes={sizes}
         onError={handleError}
         onLoad={handleLoad}
-        className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+        className={`transition-opacity duration-300 object-cover ${fill ? 'w-full h-full' : ''} ${isLoading ? 'opacity-0' : 'opacity-100'}`}
       />
     </div>
   );
@@ -101,8 +101,8 @@ export function S3Image({
 export function getImageUrl(imageId: string, type: 'profile' | 'subject' | 'question' | 'option-a' | 'option-b' | 'option-c' | 'option-d' | 'uploaded'): string {
   if (!imageId) return '';
   
-  // If it's already an S3 URL, return as is
-  if (imageId.startsWith('https://') && imageId.includes('amazonaws.com')) {
+  // If it's already a remote URL, return as is
+  if (imageId.startsWith('https://')) {
     return imageId;
   }
   
@@ -110,7 +110,7 @@ export function getImageUrl(imageId: string, type: 'profile' | 'subject' | 'ques
   return `/api/images/${type}/${imageId}`;
 }
 
-// Utility function to check if URL is S3
+// Utility function to check if URL is a remote URL
 export function isS3Url(url: string): boolean {
-  return url?.startsWith('https://') && url.includes('amazonaws.com');
+  return url?.startsWith('https://');
 }

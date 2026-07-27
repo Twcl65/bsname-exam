@@ -8,7 +8,6 @@ import {
     FileText,
     TrendingUp,
     Users,
-    Anchor,
     type LucideIcon,
 } from "lucide-react"
 
@@ -82,11 +81,11 @@ export function SuperAdminSidebar({ ...props }: React.ComponentProps<typeof Side
                     <SidebarMenuItem>
                     <SidebarMenuButton size="lg" asChild className="hover:bg-transparent hover:text-inherit">
                             <a href="#">
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-full bg-black text-white">
-                                    <Anchor className="size-4" />
+                                <div className="flex aspect-square size-10 items-center justify-center rounded-full overflow-hidden bg-transparent">
+                                    <img src="/logo.png" alt="USTP Logo" className="size-10 object-contain" />
                                 </div>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold">BSNAME-ExamSys</span>
+                                    <span className="truncate font-semibold">Board Exam System</span>
                                     <span className="truncate text-xs">Super Admin Panel</span>
                                 </div>
                             </a>

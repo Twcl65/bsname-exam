@@ -114,11 +114,14 @@ export function UserDetailsDialog({ isOpen, onClose, user, subjectId, subjectNam
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="w-[95vw] max-w-[800px] max-h-[90vh] overflow-y-auto sm:w-[90vw] md:w-[85vw] lg:w-[80vw] xl:w-[75vw]">
+            <DialogContent className="w-[95vw] max-w-5xl max-h-[90vh] overflow-y-auto sm:w-[90vw] md:w-[85vw] lg:w-[80vw] xl:w-[75vw]">
                 <DialogHeader>
                     <DialogTitle className="flex items-center space-x-3">
                         <Avatar className="h-10 w-10">
-                            <AvatarImage src={user.profilePicture} alt={user.fullName} />
+                            <AvatarImage 
+                                src={user.profilePicture ? (user.profilePicture.startsWith('http://') || user.profilePicture.startsWith('https://') || user.profilePicture.startsWith('/')) ? user.profilePicture : `/api/images/uploaded/${user.profilePicture}` : undefined} 
+                                alt={user.fullName} 
+                            />
                             <AvatarFallback>
                                 {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
                             </AvatarFallback>
@@ -155,7 +158,7 @@ export function UserDetailsDialog({ isOpen, onClose, user, subjectId, subjectNam
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center space-x-4">
                                                 <div className="text-center">
-                                                    <p className="font-medium text-sm">{exam.createdAt.toLocaleDateString()}</p>
+                                                    <p className="font-medium text-sm">{exam.createdAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                                                     <p className="text-xs text-gray-500">Date</p>
                                                 </div>
                                                 <div className="text-center">

@@ -89,7 +89,7 @@ export default function SuperAdminUserManagement() {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [userToDelete, setUserToDelete] = useState<User | null>(null)
     const [deleting, setDeleting] = useState(false)
-    
+
     // Loading states for operations
     const [creating, setCreating] = useState(false)
     const [updating, setUpdating] = useState(false)
@@ -97,7 +97,7 @@ export default function SuperAdminUserManagement() {
     // Search and filter states
     const [searchTerm, setSearchTerm] = useState("")
     const [roleFilter, setRoleFilter] = useState("")
-    
+
     // Pagination state
     const [rowsPerPage, setRowsPerPage] = useState(5)
     const [page, setPage] = useState(1)
@@ -110,7 +110,7 @@ export default function SuperAdminUserManagement() {
             setError(null)
             const response = await fetch('/api/users')
             const result = await response.json()
-            
+
             if (result.success) {
                 setUsers(result.data)
             } else {
@@ -137,7 +137,7 @@ export default function SuperAdminUserManagement() {
             })
 
             const result = await response.json()
-            
+
             if (result.success) {
                 setProfilePicture(result.imageId)
                 setProfilePictureS3Url(result.s3Url)
@@ -183,13 +183,13 @@ export default function SuperAdminUserManagement() {
                 },
                 body: JSON.stringify(userData),
             })
-            
+
             const result = await response.json()
-            
+
             if (result.success) {
                 // Refresh users list
                 await fetchUsers()
-                
+
                 // Reset form
                 setStudentId("")
                 setFullName("")
@@ -245,13 +245,13 @@ export default function SuperAdminUserManagement() {
                 },
                 body: JSON.stringify(userData),
             })
-            
+
             const result = await response.json()
-            
+
             if (result.success) {
                 // Refresh users list
                 await fetchUsers()
-                
+
                 // Reset form
                 setEditingUser(null)
                 setStudentId("")
@@ -288,9 +288,9 @@ export default function SuperAdminUserManagement() {
             const response = await fetch(`/api/users/${userToDelete.id}`, {
                 method: 'DELETE',
             })
-            
+
             const result = await response.json()
-            
+
             if (result.success) {
                 // Refresh users list
                 await fetchUsers()
@@ -318,9 +318,9 @@ export default function SuperAdminUserManagement() {
         const matchesSearch = user.studentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.username.toLowerCase().includes(searchTerm.toLowerCase())
-        
+
         const matchesRoleFilter = !roleFilter || user.role === roleFilter
-        
+
         return matchesSearch && matchesRoleFilter
     })
 
@@ -374,7 +374,7 @@ export default function SuperAdminUserManagement() {
                         <div className="flex items-center">
                             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                                 <DialogTrigger asChild>
-                                    <Button className="bg-primary cursor-pointer hover:bg-primary/90 text-primary-foreground">
+                                    <Button className="bg-green-600 cursor-pointer hover:bg-green-900 text-primary-foreground">
                                         <Plus className="h-4 w-4 mr-2" />
                                         Create User Account
                                     </Button>
@@ -411,9 +411,9 @@ export default function SuperAdminUserManagement() {
                                                 )}
                                                 {profilePicture && !uploading && (
                                                     <div className="flex items-center space-x-2">
-                                                        <Image 
-                                                            src={profilePictureS3Url || `/api/images/uploaded/${String(profilePicture)}`} 
-                                                            alt="Preview" 
+                                                        <Image
+                                                            src={profilePictureS3Url || `/api/images/uploaded/${String(profilePicture)}`}
+                                                            alt="Preview"
                                                             width={64}
                                                             height={64}
                                                             className="w-16 h-16 object-cover rounded border border-gray-200"
@@ -550,7 +550,7 @@ export default function SuperAdminUserManagement() {
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
                             </div>
-                            
+
                             {/* Filter Section */}
                             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                                 <Label htmlFor="role-filter" className="font-semibold text-base whitespace-nowrap">
@@ -626,13 +626,13 @@ export default function SuperAdminUserManagement() {
                                                                 <TableCell className="whitespace-nowrap py-2">
                                                                     <div className="flex items-center gap-3">
                                                                         <Avatar className="h-8 w-8">
-                                                                            <AvatarImage 
-                                                                                src={user.profilePicture && typeof user.profilePicture === 'string' && user.profilePicture.startsWith('https://') 
-                                                                                    ? user.profilePicture 
-                                                                                    : user.profilePicture 
-                                                                                        ? `/api/images/uploaded/${String(user.profilePicture)}` 
-                                                                                        : undefined} 
-                                                                                alt={user.fullName} 
+                                                                            <AvatarImage
+                                                                                src={user.profilePicture && typeof user.profilePicture === 'string' && user.profilePicture.startsWith('https://')
+                                                                                    ? user.profilePicture
+                                                                                    : user.profilePicture
+                                                                                        ? `/api/images/uploaded/${String(user.profilePicture)}`
+                                                                                        : undefined}
+                                                                                alt={user.fullName}
                                                                             />
                                                                             <AvatarFallback className="text-xs">
                                                                                 {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
@@ -651,12 +651,11 @@ export default function SuperAdminUserManagement() {
                                                                     <span className="text-sm text-gray-500">••••••••</span>
                                                                 </TableCell>
                                                                 <TableCell className="whitespace-nowrap py-2">
-                                                                    <Badge 
-                                                                        className={`text-xs ${
-                                                                            user.role === 'Student' 
-                                                                                ? 'bg-blue-200 text-blue-800 border-blue-300 hover:bg-blue-200' 
+                                                                    <Badge
+                                                                        className={`text-xs ${user.role === 'Student'
+                                                                                ? 'bg-blue-200 text-blue-800 border-blue-300 hover:bg-blue-200'
                                                                                 : 'bg-green-200 text-green-800 border-green-300 hover:bg-green-200'
-                                                                        }`}
+                                                                            }`}
                                                                     >
                                                                         {user.role}
                                                                     </Badge>
@@ -775,9 +774,9 @@ export default function SuperAdminUserManagement() {
                                             )}
                                             {profilePicture && !uploading && (
                                                 <div className="flex items-center space-x-2">
-                                                    <Image 
-                                                        src={profilePictureS3Url || `/api/images/uploaded/${String(profilePicture)}`} 
-                                                        alt="Preview" 
+                                                    <Image
+                                                        src={profilePictureS3Url || `/api/images/uploaded/${String(profilePicture)}`}
+                                                        alt="Preview"
                                                         width={64}
                                                         height={64}
                                                         className="w-16 h-16 object-cover rounded border border-gray-200"
@@ -906,13 +905,13 @@ export default function SuperAdminUserManagement() {
                                         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                                             <div className="flex items-center space-x-3">
                                                 <Avatar className="h-10 w-10">
-                                                    <AvatarImage 
-                                                        src={userToDelete.profilePicture && typeof userToDelete.profilePicture === 'string' && userToDelete.profilePicture.startsWith('https://') 
-                                                            ? userToDelete.profilePicture 
-                                                            : userToDelete.profilePicture 
-                                                                ? `/api/images/uploaded/${String(userToDelete.profilePicture)}` 
-                                                                : undefined} 
-                                                        alt={userToDelete.fullName} 
+                                                    <AvatarImage
+                                                        src={userToDelete.profilePicture && typeof userToDelete.profilePicture === 'string' && userToDelete.profilePicture.startsWith('https://')
+                                                            ? userToDelete.profilePicture
+                                                            : userToDelete.profilePicture
+                                                                ? `/api/images/uploaded/${String(userToDelete.profilePicture)}`
+                                                                : undefined}
+                                                        alt={userToDelete.fullName}
                                                     />
                                                     <AvatarFallback className="text-sm">
                                                         {userToDelete.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
@@ -932,8 +931,8 @@ export default function SuperAdminUserManagement() {
                                 )}
 
                                 <DialogFooter>
-                                    <Button 
-                                        variant="outline" 
+                                    <Button
+                                        variant="outline"
                                         onClick={cancelDelete}
                                         disabled={deleting}
                                     >
