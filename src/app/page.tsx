@@ -42,12 +42,12 @@ export default function LandingPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur-md shadow-sm">
-        <div className="container mx-auto px-4 py-2 flex items-center">
-          <div className="flex-1 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-md overflow-hidden bg-transparent">
+        <div className="container mx-auto px-4 py-2 flex items-center justify-between md:justify-start">
+          <div className="flex items-center gap-2 md:flex-1">
+            <div className="flex h-10 w-10 items-center justify-center rounded-md overflow-hidden bg-transparent flex-shrink-0">
               <img src="/logo.png" alt="USTP Logo" className="size-10 object-contain" />
             </div>
-            <span className="text-lg font-bold text-gray-900">Board Exam System</span>
+            <span className="text-lg font-bold text-gray-900 whitespace-nowrap">Board Exam System</span>
           </div>
 
           {/* Navigation */}
@@ -81,7 +81,7 @@ export default function LandingPage() {
             </button>
           </nav>
 
-          <div className="flex-1 flex justify-end">
+          <div className="flex justify-end md:flex-1">
             <Link href="/auth/login">
               <Button>Login</Button>
             </Link>

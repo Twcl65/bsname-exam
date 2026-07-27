@@ -498,21 +498,13 @@ export default function SuperAdminDashboard() {
                               {user.name ? user.name.charAt(0).toUpperCase() : 'S'}
                             </AvatarFallback>
                           </Avatar>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <p className="text-gray-900 font-medium">{user.name}</p>
-                              <Badge className={`text-xs px-2 py-0.5 ${user.status === 'online' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
-                                {user.status}
-                              </Badge>
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <p className="text-xs text-muted-foreground">Last seen: {user.lastSeen}</p>
-                              <Badge className="text-xs px-2 py-0.5 bg-blue-100 text-blue-800">
-                                {user.role}
-                              </Badge>
-                            </div>
+                           <div className="flex-1 min-w-0">
+                            <p className="text-gray-900 font-medium truncate">{user.name}</p>
+                            <p className="text-xs text-muted-foreground">Last seen: {user.lastSeen}</p>
                           </div>
-                          <div className={`w-3 h-3 ${getStatusColor(user.status)} rounded-full flex-shrink-0`}></div>
+                          <Badge className={`text-xs px-2 py-0.5 flex-shrink-0 ${user.status === 'online' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
+                            {user.status === 'online' ? 'Online' : 'Offline'}
+                          </Badge>
                         </div>
                       ))
                     ) : (
