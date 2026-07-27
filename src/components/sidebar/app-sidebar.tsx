@@ -165,7 +165,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <img src="/logo.png" alt="USTP Logo" className="size-10 object-contain" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Board Exam System</span>
+                  <span className="truncate font-semibold">BSNAME Mock Board Exam System</span>
                   <span className="truncate text-xs">Learning Management System</span>
                 </div>
               </a>

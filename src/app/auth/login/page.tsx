@@ -6,10 +6,10 @@ export default function Page() {
     <div className="relative flex min-h-svh w-full items-center justify-center p-6 pt-24 md:p-10 bg-slate-950">
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 z-0"></div>
-      
+
       {/* Background Image */}
       <div className="absolute inset-0 bg-[url('/bg-pic.jpg')] bg-cover bg-center bg-no-repeat opacity-20 z-0"></div>
-      
+
       {/* Dark/Transparent Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40 z-0"></div>
 
@@ -23,7 +23,7 @@ export default function Page() {
           <div className="flex h-8 w-8 items-center justify-center rounded-md overflow-hidden bg-transparent">
             <img src="/logo.png" alt="USTP Logo" className="size-8 object-contain" />
           </div>
-          <span className="text-gray-900 font-bold text-base">Board Exam System</span>
+          <span className="text-gray-900 font-bold text-base">BSNAME Mock Board Exam System</span>
         </Link>
       </div>
 
@@ -33,7 +33,7 @@ export default function Page() {
           <div className="flex h-8 w-8 items-center justify-center rounded-md overflow-hidden bg-transparent">
             <img src="/logo.png" alt="USTP Logo" className="size-8 object-contain" />
           </div>
-          <span className="text-white font-semibold text-lg">Board Exam System</span>
+          <span className="text-white font-semibold text-lg">BSNAME Mock Board Exam System</span>
         </Link>
       </div>
 

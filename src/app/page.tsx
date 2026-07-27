@@ -47,7 +47,7 @@ export default function LandingPage() {
             <div className="flex h-10 w-10 items-center justify-center rounded-md overflow-hidden bg-transparent flex-shrink-0">
               <img src="/logo.png" alt="USTP Logo" className="size-10 object-contain" />
             </div>
-            <span className="text-lg font-bold text-gray-900 whitespace-nowrap">Board Exam System</span>
+            <span className="text-md font-bold text-gray-900 whitespace-nowrap">Mock Board Exam System</span>
           </div>
 
           {/* Navigation */}
@@ -55,8 +55,8 @@ export default function LandingPage() {
             <button
               onClick={() => scrollToSection('home')}
               className={`font-medium transition-colors ${activeSection === 'home'
-                  ? 'text-primary border-b-2 border-primary pb-1'
-                  : 'text-gray-700 hover:text-primary'
+                ? 'text-primary border-b-2 border-primary pb-1'
+                : 'text-gray-700 hover:text-primary'
                 }`}
             >
               Home
@@ -64,8 +64,8 @@ export default function LandingPage() {
             <button
               onClick={() => scrollToSection('features')}
               className={`font-medium transition-colors ${activeSection === 'features'
-                  ? 'text-primary border-b-2 border-primary pb-1'
-                  : 'text-gray-700 hover:text-primary'
+                ? 'text-primary border-b-2 border-primary pb-1'
+                : 'text-gray-700 hover:text-primary'
                 }`}
             >
               Features
@@ -73,8 +73,8 @@ export default function LandingPage() {
             <button
               onClick={() => scrollToSection('about')}
               className={`font-medium transition-colors ${activeSection === 'about'
-                  ? 'text-primary border-b-2 border-primary pb-1'
-                  : 'text-gray-700 hover:text-primary'
+                ? 'text-primary border-b-2 border-primary pb-1'
+                : 'text-gray-700 hover:text-primary'
                 }`}
             >
               About
@@ -121,7 +121,7 @@ export default function LandingPage() {
                 BSNAME
               </span>
               <span className="block text-3xl md:text-4xl lg:text-5xl font-bold text-white/90">
-                Exam System
+                Mock Board Exam System
               </span>
             </h1>
           </div>
