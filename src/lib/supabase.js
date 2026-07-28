@@ -8,10 +8,16 @@ import { createClient } from '@supabase/supabase-js';
 let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
 
 if (!supabaseUrl && process.env.DATABASE_URL) {
-  const match = process.env.DATABASE_URL.match(/@db\.([a-z0-9\-]+)\.supabase\.co/i);
-  if (match && match[1]) {
-    supabaseUrl = `https://${match[1]}.supabase.co`;
+  const userMatch = process.env.DATABASE_URL.match(/postgres\.([a-z0-9\-]+)/i);
+  if (userMatch && userMatch[1] && userMatch[1] !== 'user') {
+    supabaseUrl = `https://${userMatch[1]}.supabase.co`;
     console.log(`Dynamically resolved Supabase URL from DATABASE_URL: ${supabaseUrl}`);
+  } else {
+    const match = process.env.DATABASE_URL.match(/@db\.([a-z0-9\-]+)\.supabase\.co/i);
+    if (match && match[1]) {
+      supabaseUrl = `https://${match[1]}.supabase.co`;
+      console.log(`Dynamically resolved Supabase URL from DATABASE_URL: ${supabaseUrl}`);
+    }
   }
 }
 
