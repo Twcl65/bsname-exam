@@ -315,6 +315,11 @@ export default function SuperAdminUserManagement() {
 
     // Filter and pagination logic
     const filteredUsers = users.filter(user => {
+        // Do not display Super Admin users in the user management table
+        if (user.role === 'Super Admin' as any || user.role === 'super-admin' as any) {
+            return false
+        }
+
         const matchesSearch = user.studentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.username.toLowerCase().includes(searchTerm.toLowerCase())

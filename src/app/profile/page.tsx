@@ -27,7 +27,6 @@ import { useUser } from "@/contexts/UserContext"
 import {
     User,
     Mail,
-    Phone,
     Lock,
     KeyRound,
     Clock,
@@ -275,7 +274,7 @@ export default function ProfilePage() {
 
     // Role badge renderer
     const renderRoleBadge = (role: string) => {
-        switch (role?.toLowerCase()) {
+        switch (role?.toLowerCase().replace(' ', '-')) {
             case 'super-admin':
                 return (
                     <Badge className="bg-red-50 text-red-700 border border-red-200 hover:bg-red-50 flex items-center gap-1 w-fit">
@@ -445,7 +444,7 @@ export default function ProfilePage() {
                                                         </div>
                                                     )}
 
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div className="grid grid-cols-1 gap-4">
                                                         <div className="space-y-2">
                                                             <Label htmlFor="fullName" className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Full Name *</Label>
                                                             <div className="relative">
@@ -456,20 +455,6 @@ export default function ProfilePage() {
                                                                     onChange={(e) => setFullName(e.target.value)}
                                                                     className="pl-9 border-gray-200 focus-visible:ring-emerald-500 focus-visible:border-emerald-500"
                                                                     placeholder="Your Full Name"
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="space-y-2">
-                                                            <Label htmlFor="phone" className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Phone Number</Label>
-                                                            <div className="relative">
-                                                                <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                                                                <Input
-                                                                    id="phone"
-                                                                    value={phone}
-                                                                    onChange={(e) => setPhone(e.target.value)}
-                                                                    className="pl-9 border-gray-200 focus-visible:ring-emerald-500 focus-visible:border-emerald-500"
-                                                                    placeholder="Phone Number"
                                                                 />
                                                             </div>
                                                         </div>

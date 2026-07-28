@@ -176,7 +176,7 @@ CREATE TABLE `uploaded_images` (
 --
 
 INSERT INTO `users` (`id`, `student_id`, `profile_picture`, `full_name`, `username`, `password`, `role`, `phone`, `is_active`, `last_login`, `created_at`, `updated_at`) VALUES
-('4fbf1f6b-3783-41a7-acd4-b381198ce872', '001', NULL, 'Super Admin', 'admin@exam.sys', '$2b$10$Ew5HzoCcvXidwmHYrfRX4uJpploeTDHemOrt8KdQ/Rsyvh.4ghmBa', 'Super Admin', '', 1, NULL, NOW(), NOW()),
+('4fbf1f6b-3783-41a7-acd4-b381198ce872', '001', NULL, 'Super Admin', 'superadmin@gmail.com', '$2b$10$Bcn0ezBPey54xDIKq01yeeXZLeckYon80uc6URtCmrS7uD.6D7tNi', 'Super Admin', '', 1, NULL, NOW(), NOW()),
 ('33dfb6e0-0c04-40f9-b947-1f3d18781821', '002', '', 'Instructor', 'instructor@exam.sys', '$2b$10$WZCtEyhQP0quiwVbG16fBOtTAxfIWFZ8nSfAi94xjEiv.vmqSPvSu', 'Instructor', '', 1, NULL, NOW(), NOW()),
 ('767752e6-650b-4f9c-823d-5d8286ee9b97', '003', '', 'Student', 'student@exam.sys', '$2b$10$dORf22/L2eps/sr86RirA.Comp1K7qTvsm8qmdii5fIUWWgvoq10m', 'Student', '', 1, NULL, NOW(), NOW());
 
